@@ -5,7 +5,7 @@ from platform import python_version as pv
 from random import randint, choice
 from lib.character import *
 def lluvia():
-	empieza_lluvia = ("\n{}(pensamiento): Está empezando a llover.".format(mc.nombre),"\n{}(pensaiento):Las frias gotas de la lluvia me traen malos recuerdos.".format(),"\n{}(pensamiento):Quizá está lluvia sea un problema despues".format(mc.nombre))
+	empieza_lluvia = ("\n{}(pensamiento): Está empezando a llover.".format(mc.nombre),"\n{}(pensaiento):Las frias gotas de la lluvia me traen malos recuerdos.".format(mc.nombre),"\n{}(pensamiento):Quizá está lluvia sea un problema despues".format(mc.nombre))
 	acaba_lluvia=("\n{}(pensamiento): La lluvia acabó".format(mc.nombre),"\n{}(pensamiento):Parese que no habrá lluvia por un rato".format(mc.nombre),"\n{}(pensamiento): La lluvia se fue, espero que tambien se vaya el frio".format(mc.nombre))
 	print(choice(empieza_lluvia))
 	tiempo_de_lluvia = randint(60, 300)
@@ -21,10 +21,13 @@ def robo():
 	print("\n*****Batalla*****")
 	ladron_vida = randint(2, 3)
 	ladron_ataque = randint(1,4)
-	objeto_robado = choice(mc.inventario)
+	inv = []
+	for item in mc.inventario:
+		inv.append(item)
+	objeto_robado = choice(inv)
 	cantidad_robada = randint(1,mc.inventario[objeto_robado][0])
 	if mc.status["Fuerza"] > ladron_vida:
-		print("\n**{} ataca al sospechoso y lo derrota.".format(mc.name))
+		print("\n**{} ataca al sospechoso y lo derrota.".format(mc.nombre))
 	else:
 		print("\n**Los ataques de {} no son lo suficientemente fuertes para el bandido.".format(mc.nombre))
 		do = randint(1,3)
@@ -34,6 +37,11 @@ def robo():
 				del mc.inventario[objeto_robado]
 			else:
 				mc.inventario[objeto_robado][0] -= cantidad_robada
+		elif do == 2:
+			print("El bandido le hace daño a {} y hulle.".format(mc.nombre))
+			mc.status["Salud"] -= ladron_ataque
+		elif do == 3:
+			print("{} logra escapar a salvo.".format(mc.nombre))
 def eventos():
 	events = (lluvia, robo)
 	while True:
@@ -61,6 +69,11 @@ if __name__ == '__main__':
 				mc.verStatus()
 			elif cmd[:4] == "usar":
 				mc.consumir(cmd[5:])
+			elif cmd == "ADMIN: -*-lluvia":
+				#Comando para testear
+				lluvia()
+			elif cmd == "ADMIN: -*-robo":
+				robo()
 		except IndexError:
 			pass
 		except Exception as e:
