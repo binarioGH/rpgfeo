@@ -1,0 +1,1 @@
+Es una especie de minijuego de consola uwu
