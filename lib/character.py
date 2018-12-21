@@ -1,8 +1,14 @@
 #-*-coding: utf-8-*-
 from threading import Thread
 from time import sleep
+from platform import platform
 class Personaje():
 	def __init__(self, nombre, genero):
+		self.pause = False
+		if str(platform())[0] == "W":
+		 	self.clear = "cls"
+		else:
+			self.clear = "clear"
 		self.nombre = nombre
 		self.genero = genero
 		if self.genero == "h":
