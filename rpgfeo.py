@@ -4,11 +4,13 @@ from time import sleep
 from platform import python_version as pv
 from platform import platform
 from random import choice, randint
-from lib.character import *
+from lib.character import Personaje
 from lib.combat import *
+from lib.entorno import Mundo
 from os import system
 from getpass import getpass
 def lluvia():
+	m.eventsthread = False
 	empieza_lluvia = ("\n{}(pensamiento): Está empezando a llover.".format(mc.nombre),"\n{}(pensaiento):Las frias gotas de la lluvia me traen malos recuerdos.".format(mc.nombre),"\n{}(pensamiento):Quizá está lluvia sea un problema despues".format(mc.nombre))
 	acaba_lluvia=("\n{}(pensamiento): La lluvia acabó".format(mc.nombre),"\n{}(pensamiento):Parese que no habrá lluvia por un rato".format(mc.nombre),"\n{}(pensamiento): La lluvia se fue, espero que tambien se vaya el frio".format(mc.nombre))
 	print(choice(empieza_lluvia))
@@ -20,13 +22,15 @@ def lluvia():
 			mc.status['Temperatura corporal'] -= 1
 		count += 1
 	print(choice(acaba_lluvia))
+	m.eventsthread = True
 def robo():
+	mc.pause = True
+	m.eventsthread = False
 	narrador =("**Una persona se aproxima, tiene uniforme de la orden de los cuervos.","**Una sombra está rondando, aparenta malas intenciones.","**Un bandido mira a {} fijamente mientras se acerca.".format(mc.nombre))
 	print(choice(narrador))
 	print("\n*****Batalla*****")
 	ladron_vida = randint(2*mc.status["Nivel"], 3*mc.status["Nivel"])
 	ladron_ataque = randint(mc.status["Nivel"],4*mc.status["Nivel"])
-	mc.pause = True
 	print("\n{}".format(choice(narrador)))
 	getpass("Presiona doble enter para continuar...		")
 	kmbt = combat(mc.clear, mc.nombre, mc.status["Salud"],mc.status["Fuerza"],"???",ladron_vida,ladron_ataque)
@@ -50,17 +54,16 @@ def robo():
 			else:
 				mc.inventario[objeto_robado][0] -= cantidad_robadat
 	mc.pause = False
+	m.eventsthread = True
 
 def eventos():
 	events = (lluvia, robo)
-	while True:
+	while m.eventsthread:
 		sleep(randint(60, 120))
 		choice(events)() #Escoger un evento de manera 'aleatoria'
-		
-
-
-		
+				
 if __name__ == '__main__':
+	m = Mundo()
 	if str(pv())[0] == "3":
 		#Esto es para tener compatibilidad entre python 3 y 2
 		raw_input = input
@@ -88,6 +91,23 @@ if __name__ == '__main__':
 					mc.verStatus()
 				elif cmd[:4] == "usar":
 					mc.consumir(cmd[5:])
+				elif cmd[:7] == "mejorar":
+					mc.consumirxp(cmd[8:])
+				elif cmd[:7] == "equipar":
+					mc.equipar(cmd[8:])
+				elif cmd[:10] == "desequipar":
+					mc.desequipar(cmd[11:])
+				elif cmd == "mirar" or cmd == "mirar el entorno" or cmd == "mirar alrrededor":
+					m.lookarround()
+				elif cmd == "moverse" or cmd == "caminar":
+					m.lugarnuevo = True
+				elif cmd[:7] == "recoger":
+					if cmd[8:] in m.arround:
+						mc.inventario[cmd[8:]] = m.arround[cmd[8:]]
+					else:
+						print("**No se encuentra dicho objeto en el entorno.")
+				elif cmd == mc.clear:
+					system(mc.clear)
 				elif cmd == "ADMIN: -*-lluvia":
 					rain = Thread(target=lluvia)
 					rain.daemon = True
@@ -96,12 +116,9 @@ if __name__ == '__main__':
 					crime = Thread(target=robo)
 					crime.daemon = True
 					crime.start()
-				elif cmd == mc.clear:
-					system(mc.clear)
-				elif cmd[:7] == "mejorar":
-					mc.consumirxp(cmd[8:])
 				elif cmd == "ADMIN: -*-xp":
 					mc.xp = 1000
+
 			except IndexError:
 				pass
 			except Exception as e:
