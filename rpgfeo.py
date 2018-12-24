@@ -7,6 +7,7 @@ from random import choice, randint
 from lib.character import *
 from lib.combat import *
 from os import system
+from getpass import getpass
 def lluvia():
 	empieza_lluvia = ("\n{}(pensamiento): Está empezando a llover.".format(mc.nombre),"\n{}(pensaiento):Las frias gotas de la lluvia me traen malos recuerdos.".format(mc.nombre),"\n{}(pensamiento):Quizá está lluvia sea un problema despues".format(mc.nombre))
 	acaba_lluvia=("\n{}(pensamiento): La lluvia acabó".format(mc.nombre),"\n{}(pensamiento):Parese que no habrá lluvia por un rato".format(mc.nombre),"\n{}(pensamiento): La lluvia se fue, espero que tambien se vaya el frio".format(mc.nombre))
@@ -23,12 +24,17 @@ def robo():
 	narrador =("**Una persona se aproxima, tiene uniforme de la orden de los cuervos.","**Una sombra está rondando, aparenta malas intenciones.","**Un bandido mira a {} fijamente mientras se acerca.".format(mc.nombre))
 	print(choice(narrador))
 	print("\n*****Batalla*****")
-	ladron_vida = randint(2, 3)
-	ladron_ataque = randint(1,4)
+	ladron_vida = randint(2*mc.status["Nivel"], 3*mc.status["Nivel"])
+	ladron_ataque = randint(mc.status["Nivel"],4*mc.status["Nivel"])
 	mc.pause = True
+	print("\n{}".format(choice(narrador)))
+	getpass("Presiona doble enter para continuar...		")
 	kmbt = combat(mc.clear, mc.nombre, mc.status["Salud"],mc.status["Fuerza"],"???",ladron_vida,ladron_ataque)
 	if kmbt == 1:
 		print("**{} derrotó al ladrón y escapó.".format(mc.nombre))
+		xp = (ladron_vida + ladron_ataque) / 2
+		print("**{} adquirio {} puntos de xp.".format(mc.nombre, xp))
+		mc.xp += xp
 	else:
 		if randint(0,1) == 1:
 			print("**{} es herido durante el combate, pero logra escapar.".format(mc.nombre))
@@ -92,6 +98,10 @@ if __name__ == '__main__':
 					crime.start()
 				elif cmd == mc.clear:
 					system(mc.clear)
+				elif cmd[:7] == "mejorar":
+					mc.consumirxp(cmd[8:])
+				elif cmd == "ADMIN: -*-xp":
+					mc.xp = 1000
 			except IndexError:
 				pass
 			except Exception as e:

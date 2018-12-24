@@ -4,6 +4,8 @@ from time import sleep
 from platform import platform
 class Personaje():
 	def __init__(self, nombre, genero):
+		self.xp = 0
+		self.xppoints = 0
 		self.pause = False
 		if str(platform())[0] == "W":
 		 	self.clear = "cls"
@@ -16,7 +18,7 @@ class Personaje():
 		else:
 			self.letra = ("a", "á")
 		self.comentarios()
-		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30, "Arma equipada": 0, "Armadura":0,"Dinero": 20, "Temperatura corporal":34}
+		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30,"Dinero": 20, "Temperatura corporal":34,"Nivel":1}
 		self.inventario = {"Poción de resistencia":[1,("Resistencia (debil)", "resistenciatencia"),5],"Cordero":[3,("Comida", "Hambre"),5]}
 		self.objetivos = {}
 		hambruna = Thread(target=self.hunger)
@@ -24,8 +26,33 @@ class Personaje():
 		hambruna.start()
 		temp = Thread(target=self.temperatura)
 		temp.daemon = True
-		temp.start( )
-	def comentarios(self):
+		temp.start()
+		niveles = Thread(target=self.lvlup)
+		niveles.daemon = True
+		niveles.start()
+	def lvlup(self):
+		xptop = 10
+		while True:
+			if self.xp >= xptop:
+				if self.xp % 10 == 0:
+					self.xppoints += 10
+				else:
+					self.xppoints += 1
+				self.status["Nivel"]+= 1
+				xptop = xptop * 2 
+				print("**Tienes nuevos puntos de experiencia")
+
+	def consumirxp(self, mejora):
+		elements = ("Fuerza", "Salud", "Resistencia")
+		if mejora in elements:
+			if self.xppoints <= 0:
+				print("**No tienes suficientes puntos de experiencia.")
+			else:
+				print("**Se ha mejorado el atributo {}.".format(mejora))
+				self.status[mejora] += 1
+		else:
+			print("**No se puede mejorar el atributo '{}'.".format(mejora))
+	def comentarios(self):	
 		self.no_encontrar = ("\n{}(pensamiento): Quizá me falla la memoría, pero estaba segur{} de que dejé eso aquí".format(self.nombre, self.letra[1]),"\n{}(Pensamiento): Juraría que tenía un poco aún".format(self.nombre),"\n{}(Pensamiento): Diablos, ya no tengo más".format(self.nombre),"{}(pensamiento): ¿Donde quedó eso que estoy buscando?".format(self.nombre))
 		self.acabar=("\n{}(pensamiento): Creo que ese era el ultimo...".format(self.nombre),"\n{}(pensamineto): Y ahí va la ultima que quedaba...".format(self.nombre),"\n{}(pensamiento): Creo que con eso no quedan más.".format(self.nombre))
 	def temperatura(self):

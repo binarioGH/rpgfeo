@@ -18,17 +18,12 @@ def combat(clear,pnombre,plive, pattack,bnombre, blive, battack):
 	   /|\\
 	   / \\''',
 	   '''
-             6
+            6
 	   /|\\
 	   / \\ ''')
 	if str(pv())[0] == "3":
 		raw_input = input
-	count = 0
 	while plive > 0 and blive > 0:
-		if count == 0:
-			print("Aprieta enter para empezar el combate.")
-			count += 1
-
 		system(clear)
 		cmd = raw_input('''
 			[{}]  [{}]        [{}]  [{}]
@@ -37,7 +32,7 @@ def combat(clear,pnombre,plive, pattack,bnombre, blive, battack):
 
             [A] Atacar.
             [B] Bloquear ataque.
-			>>>'''.format(pnombre, plive, bnombre, blive, avatares[0], avatares[randint(1,3)]))
+			>>>'''.format(pnombre, plive, bnombre, blive, avatares[0], avatares[randint(1,3)]).strip())
 		cmd = cmd.lower()
 		if cmd == "a":
 			blive -= pattack
