@@ -98,14 +98,50 @@ if __name__ == '__main__':
 				elif cmd[:10] == "desequipar":
 					mc.desequipar(cmd[11:])
 				elif cmd == "mirar" or cmd == "mirar el entorno" or cmd == "mirar alrrededor":
-					m.lookarround()
+					m.lookaround()
 				elif cmd == "moverse" or cmd == "caminar":
 					m.lugarnuevo = True
 				elif cmd[:7] == "recoger":
-					if cmd[8:] in m.arround:
-						mc.inventario[cmd[8:]] = m.arround[cmd[8:]]
+					if cmd[8:] in m.around and not m.tienda:
+						m.around[cmd[8:]][0] = m.around[cmd[8:]][0] - 1
+						print(m.around[cmd[8:]][0])
+						if cmd[8:] not in mc.inventario:
+							mc.inventario[cmd[8:]] = []
+							for value in m.around[cmd[8:]]:
+								mc.inventario[cmd[8:]].append(value)
+							mc.inventario[cmd[8:]][0] = 1	
+						else:
+							mc.inventario[cmd[8:]][0] += 1
+
+						if m.around[cmd[8:]][0] == 0:
+							del m.around[cmd[8:]]
 					else:
-						print("**No se encuentra dicho objeto en el entorno.")
+						if not m.tienda:
+							print("**No puedes recoger objetos de una tienda.")
+						else:
+							print("**No se encuentra dicho objeto en el entorno.")
+				elif cmd[:7] == "comprar":
+					if cmd[8:] in m.around and m.tienda:
+						if mc.status["Dinero"] >= m.around[cmd[8:]][2] * m.around[cmd[8:]][2]:
+							mc.status["Dinero"] -= m.around[cmd[8:]][2] * m.around[cmd[8:]][2]
+							if cmd[8:] in mc.inventario:
+								mc.inventario[cmd[8:]][0] += 1
+							else:
+								mc.inventario[cmd[8:]] = []
+								for value in m.around[cmd[8:]]:
+									mc.inventario[cmd[8:]].append(value)
+								mc.inventario[cmd[8:]][0] = 1
+							m.around[cmd[8:]][0] -= 1
+							if m.around[cmd[8:]][0] <= 0:
+								del m.around[cmd[8:]]
+						else:
+							print("**No tienes suficiente dinero.")
+					else:
+						if not m.tienda:
+							print("**No estás en una tienda")
+						else:
+							print("**Dicho objeto no se encuentra en la tienda.")
+
 				elif cmd == mc.clear:
 					system(mc.clear)
 				elif cmd == "ADMIN: -*-lluvia":
@@ -118,7 +154,8 @@ if __name__ == '__main__':
 					crime.start()
 				elif cmd == "ADMIN: -*-xp":
 					mc.xp = 1000
-
+				elif cmd == "ADMIN: -*-dinero":
+					mc.status["Dinero"] += 10000
 			except IndexError:
 				pass
 			except Exception as e:

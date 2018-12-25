@@ -1,6 +1,7 @@
 #-*-coding: utf-8-*-
 from threading import Thread
 from time import sleep
+from random import choice
 from platform import platform
 def listarobjetos(lista):
 	print("Objeto      |      Cantidad       |      Tipo")
@@ -84,7 +85,7 @@ class Personaje():
 		for necesidad in self.status:
 			print("{}: {}".format(necesidad, self.status[necesidad]))
 	def consumir(self, item):
-		if item in self.inventario and self.inventario[1][2]:
+		if item in self.inventario and self.inventario[item][1][2]:
 			self.status[self.inventario[item][1][1]] += self.inventario[item][2]
 			self.inventario[item][0] -= 1
 			if self.inventario[item][0] <= 0:
@@ -96,7 +97,7 @@ class Personaje():
 			else:
 				print("**{} no es un objeto consumible.".format(item))
 	def equipar(self, item):
-		if item in self.inventario and not self.equipables[item][1][2]:
+		if item in self.inventario and not self.inventario[item][1][2]:
 			if self.equipo[self.inventario[item][1][3]]:
 				if self.inventario[item][1][3] == "Manos":
 					soespacio = ("s","n")
@@ -118,5 +119,6 @@ class Personaje():
 			self.inventario[item] = self.equipables[item]
 			del self.equipables[item]
 			self.equipo[self.inventario[item][1][3]] = False
+			self.status[self.inventario[item][1][1]] -= self.inventario[item][2]
 		else:
 			print("**No tienes equipado ese objeto.")
