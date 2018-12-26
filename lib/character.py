@@ -24,7 +24,7 @@ class Personaje():
 		else:
 			self.letra = ("a", "á")
 		self.comentarios()
-		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30,"Dinero": 20, "Temperatura corporal":34,"Nivel":1}
+		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30,"Dinero": 20, "Temperatura corporal":34,"Nivel":1,"Karma":0}
 		self.inventario = {"Poción de resistencia":[1,("Poción (debil)", "Resistencia", True),5],"Cordero":[3,("Comida", "Hambre",True),5]}
 		self.equipables = {}
 		self.equipo = {"Cabeza":False,"Pecho":False,"Manos":False,"Arma":False}
@@ -37,6 +37,9 @@ class Personaje():
 		niveles = Thread(target=self.lvlup)
 		niveles.daemon = True
 		niveles.start()
+		karma = Thread(target=self.karmacheck)
+		karma.daemon = True
+		karma.start()
 	def lvlup(self):
 		xptop = 10
 		while True:
@@ -79,6 +82,22 @@ class Personaje():
 				self.status["Hambre"] -= 1
 				if self.status["Hambre"] == 5:
 					print("{}(pensamiento): Empiezo a sentir hambruna".format(self.nombre))
+	def karmacheck(self):
+		karmatop = 10
+		karmabottom = -10
+		bufo = 1
+		while True:
+			if self.status["Karma"] >=  karmatop:
+				self.status["Salud"] += bufo
+				bufo += bufo
+				karmatop += karmatop
+				print("**Tu salud ha mejorado por tu karma.")
+			elif self.status["Karma"] <= karmabottom:
+				self.status["Fuerza"] += bufo
+				bufo += bufo
+				karmabottom += karmabottom
+				print("**Tu fuerza ha mejorado por tu karma.")
+
 	def verInventario(self):
 		listarobjetos(self.inventario)
 	def verStatus(self):

@@ -31,13 +31,11 @@ def robo():
 	print("\n*****Batalla*****")
 	ladron_vida = randint(2*mc.status["Nivel"], 3*mc.status["Nivel"])
 	ladron_ataque = randint(mc.status["Nivel"],4*mc.status["Nivel"])
-	print("\n{}".format(choice(narrador)))
 	getpass("Presiona doble enter para continuar...		")
-	kmbt = combat(mc.clear, mc.nombre, mc.status["Salud"],mc.status["Fuerza"],"???",ladron_vida,ladron_ataque)
+	kmbt = combat(mc.clear, mc.nombre, mc.status,"???",ladron_vida,ladron_ataque, mc.inventario)
 	if kmbt == 1:
-		print("**{} derrotó al ladrón y escapó.".format(mc.nombre))
 		xp = (ladron_vida + ladron_ataque) / 2
-		print("**{} adquirio {} puntos de xp.".format(mc.nombre, xp))
+		print("**{} adquirió {} puntos de xp.".format(mc.nombre, xp))
 		mc.xp += xp
 	else:
 		if randint(0,1) == 1:
@@ -58,10 +56,13 @@ def robo():
 
 def eventos():
 	events = (lluvia, robo)
-	while m.eventsthread:
-		sleep(randint(60, 120))
-		choice(events)() #Escoger un evento de manera 'aleatoria'
-				
+	while True:
+		while m.eventsthread:
+			sleep(randint(60, 120))
+			if m.eventsthread:
+			    choice(events)() #Escoger un evento de manera 'aleatoria'
+			else:
+				continue
 if __name__ == '__main__':
 	m = Mundo()
 	if str(pv())[0] == "3":
@@ -104,7 +105,6 @@ if __name__ == '__main__':
 				elif cmd[:7] == "recoger":
 					if cmd[8:] in m.around and not m.tienda:
 						m.around[cmd[8:]][0] = m.around[cmd[8:]][0] - 1
-						print(m.around[cmd[8:]][0])
 						if cmd[8:] not in mc.inventario:
 							mc.inventario[cmd[8:]] = []
 							for value in m.around[cmd[8:]]:
