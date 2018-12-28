@@ -28,19 +28,16 @@ class Personaje():
 		self.inventario = {"Poción de resistencia":[1,("Poción (debil)", "Resistencia", True),5],"Cordero":[3,("Comida", "Hambre",True),5]}
 		self.equipables = {}
 		self.equipo = {"Cabeza":False,"Pecho":False,"Manos":False,"Arma":False}
-		hambruna = Thread(target=self.hunger)
-		hambruna.daemon = True
-		hambruna.start()
-		temp = Thread(target=self.temperatura)
-		temp.daemon = True
-		temp.start()
-		niveles = Thread(target=self.lvlup)
-		niveles.daemon = True
-		niveles.start()
-		karma = Thread(target=self.karmacheck)
-		karma.daemon = True
-		karma.start()
-	def lvlup(self):
+		needs = Thread(target=self.necesidadesA)
+		needs.daemon = True
+		needs.start()
+		needs2 = Thread(target=self.necesidadesB)
+		needs2.daemon = True
+		needs2.start()
+	def necesidadesA(self):
+		karmatop = 10
+		karmabottom = -10
+		bufo = 1
 		xptop = 10
 		while True:
 			if self.xp >= xptop:
@@ -51,6 +48,26 @@ class Personaje():
 				self.status["Nivel"]+= 1
 				xptop = xptop * 2 
 				print("**Tienes nuevos puntos de experiencia")
+			if self.status["Karma"] >=  karmatop:
+				self.status["Salud"] += bufo
+				bufo += bufo
+				karmatop += karmatop
+				print("**Tu salud ha mejorado por tu karma.")
+			elif self.status["Karma"] <= karmabottom:
+				self.status["Fuerza"] += bufo
+				bufo += bufo
+				karmabottom += karmabottom
+				print("**Tu fuerza ha mejorado por tu karma.")
+	def necesidadesB(self):
+		while True:
+			sleep(self.status["Resistencia"])
+			self.status["Hambre"] -= 1
+			if self.status["Temperatura corporal"] > 38 or self.status["Temperatura corporal"] < 30:
+				self.status["Salud"] -= 1
+			if self.status["Hambre"] <= 0:
+				self.status["Salud"] -= 1
+			if self.status["Hambre"] == 5:
+				print("{}(pensamiento): Empiezo a sentir hambruna".format(self.nombre))
 
 	def consumirxp(self, mejora):
 		elements = ("Fuerza", "Salud", "Resistencia")
@@ -66,38 +83,6 @@ class Personaje():
 	def comentarios(self):	
 		self.no_encontrar = ("\n{}(pensamiento): Quizá me falla la memoría, pero estaba segur{} de que dejé eso aquí".format(self.nombre, self.letra[1]),"\n{}(Pensamiento): Juraría que tenía un poco aún".format(self.nombre),"\n{}(Pensamiento): Diablos, ya no tengo más".format(self.nombre),"{}(pensamiento): ¿Donde quedó eso que estoy buscando?".format(self.nombre))
 		self.acabar=("\n{}(pensamiento): Creo que ese era el ultimo...".format(self.nombre),"\n{}(pensamineto): Y ahí va la ultima que quedaba...".format(self.nombre),"\n{}(pensamiento): Creo que con eso no quedan más.".format(self.nombre))
-	def temperatura(self):
-		while True:
-			if self.status["Temperatura corporal"] > 38 or self.status["Temperatura corporal"] < 30:
-				sleep(self.status["Resistencia"])
-				self.status["Salud"] -= 1
-	def hunger(self):
-		while True:
-			sleep(self.status["Resistencia"])
-			if self.status["Hambre"] <= 0:
-				self.status["Salud"] -= 1
-				if self.status["Salud"] == 5:
-					print("{}(pensamiento): Estoy en un muy mal estado".format(self.nombre))
-			else:
-				self.status["Hambre"] -= 1
-				if self.status["Hambre"] == 5:
-					print("{}(pensamiento): Empiezo a sentir hambruna".format(self.nombre))
-	def karmacheck(self):
-		karmatop = 10
-		karmabottom = -10
-		bufo = 1
-		while True:
-			if self.status["Karma"] >=  karmatop:
-				self.status["Salud"] += bufo
-				bufo += bufo
-				karmatop += karmatop
-				print("**Tu salud ha mejorado por tu karma.")
-			elif self.status["Karma"] <= karmabottom:
-				self.status["Fuerza"] += bufo
-				bufo += bufo
-				karmabottom += karmabottom
-				print("**Tu fuerza ha mejorado por tu karma.")
-
 	def verInventario(self):
 		listarobjetos(self.inventario)
 	def verStatus(self):
