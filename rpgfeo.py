@@ -7,6 +7,7 @@ from random import choice, randint
 from lib.character import Personaje
 from lib.combat import *
 from lib.entorno import Mundo
+from lib.craft import * 
 from os import system
 from getpass import getpass
 def lluvia():
@@ -65,6 +66,7 @@ def eventos():
 				continue
 if __name__ == '__main__':
 	m = Mundo()
+	ct = CraftingTable()
 	if str(pv())[0] == "3":
 		#Esto es para tener compatibilidad entre python 3 y 2
 		raw_input = input
@@ -141,7 +143,10 @@ if __name__ == '__main__':
 							print("**No estás en una tienda")
 						else:
 							print("**Dicho objeto no se encuentra en la tienda.")
-
+				elif cmd[:5] == "crear" and cmd[5:] != "":
+					ct.craft(mc.inventario, cmd[6:])
+				elif cmd == "crear":
+					ct.listarobjetos()
 				elif cmd == mc.clear:
 					system(mc.clear)
 				elif cmd == "ADMIN: -*-lluvia":

@@ -47,6 +47,8 @@ class Personaje():
 					self.status["Salud"] -= 1
 				if self.status["Hambre"] <= 0:
 					self.status["Salud"] -= 1
+				elif self.status["Hambre"] >= 30:
+					self.status["Fuerza"] -= 1
 				if self.status["Hambre"] == 5:
 					print("{}(pensamiento): Empiezo a sentir hambruna".format(self.nombre))
 			if self.xp >= xptop:

@@ -31,7 +31,7 @@ class Mundo():
 		}
 	def lookaround(self):
 		if self.lugarnuevo:
-			if randint(1,5) == 5:
+			if randint(1,10) == 5:
 				print("**Entras a una tienda.")
 				self.tienda = True
 				objlist = self.objetos_tienda
