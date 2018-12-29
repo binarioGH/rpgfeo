@@ -28,18 +28,27 @@ class Personaje():
 		self.inventario = {"Poción de resistencia":[1,("Poción (debil)", "Resistencia", True),5],"Cordero":[3,("Comida", "Hambre",True),5]}
 		self.equipables = {}
 		self.equipo = {"Cabeza":False,"Pecho":False,"Manos":False,"Arma":False}
-		needs = Thread(target=self.necesidadesA)
+		needs = Thread(target=self.necesidades)
 		needs.daemon = True
 		needs.start()
-		needs2 = Thread(target=self.necesidadesB)
-		needs2.daemon = True
-		needs2.start()
-	def necesidadesA(self):
+	def necesidades(self):
 		karmatop = 10
 		karmabottom = -10
 		bufo = 1
 		xptop = 10
+		secs = 0
 		while True:
+			sleep(1)
+			secs += 1
+			if secs >= self.status["Resistencia"]:
+				secs = 0
+				self.status["Hambre"] -= 1
+				if self.status["Temperatura corporal"] > 38 or self.status["Temperatura corporal"] < 30:
+					self.status["Salud"] -= 1
+				if self.status["Hambre"] <= 0:
+					self.status["Salud"] -= 1
+				if self.status["Hambre"] == 5:
+					print("{}(pensamiento): Empiezo a sentir hambruna".format(self.nombre))
 			if self.xp >= xptop:
 				if self.xp % 10 == 0:
 					self.xppoints += 10
@@ -58,17 +67,6 @@ class Personaje():
 				bufo += bufo
 				karmabottom += karmabottom
 				print("**Tu fuerza ha mejorado por tu karma.")
-	def necesidadesB(self):
-		while True:
-			sleep(self.status["Resistencia"])
-			self.status["Hambre"] -= 1
-			if self.status["Temperatura corporal"] > 38 or self.status["Temperatura corporal"] < 30:
-				self.status["Salud"] -= 1
-			if self.status["Hambre"] <= 0:
-				self.status["Salud"] -= 1
-			if self.status["Hambre"] == 5:
-				print("{}(pensamiento): Empiezo a sentir hambruna".format(self.nombre))
-
 	def consumirxp(self, mejora):
 		elements = ("Fuerza", "Salud", "Resistencia")
 		if mejora in elements:
