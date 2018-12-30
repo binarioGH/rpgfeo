@@ -1,0 +1,58 @@
+.importante{
+	font-family:"Arial Black";
+	border-bottom:1px solid black;
+}
+body{
+	background-color:rgb(67, 48, 136);}
+header{
+	border:2px solid black;
+	background-color:rgb(255,255,255);
+	width:50%;
+	margin-left:25%;
+	margin-top:5%;
+	margin-bottom:5%;}
+.titular{
+	border-bottom:2px solid black;
+	text-align:center;
+	font-family:"Arial Black";
+	font-size:20px;}
+.nv{
+	margin-left:25%;
+	width: 50%;}
+article{
+	width: 70%;
+	margin-left:15%;
+	border:2px solid black;
+	background-color:rgb(255,255,255);
+	font-family:Arial;
+	margin-bottom:2%;}
+.prfo{
+	margin-top:10px;
+	margin-bottom:10px;
+	margin-left:5%;
+	margin-right:5%;
+}
+.cmds{
+	margin-left:15%;
+}
+.cmds li{
+	margin-bottom:10px;
+	border-bottom:2px solid black;
+	width:12%;
+}
+/*
+    En esta parte pienso poner una descripción de cada comando, por eso tienen IDs, pero no tengo internet para buscar como se hace eso.
+*/
+.sep{
+	border-bottom:3px solid black;}
+footer{
+	background-color:black;
+	color: white;
+	font-family:sans-serif;
+	text-align: center;
+}
+footer p:hover{
+	color:black;
+	background-color:white;
+
+}
