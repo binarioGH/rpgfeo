@@ -10,6 +10,7 @@ def listarobjetos(lista):
 		print("{}      |      {}      |      {}".format(item,lista[item][0],lista[item][1][0]))
 class Personaje():
 	def __init__(self, nombre, genero):
+
 		self.pause = False
 		self.xp = 0
 		self.xppoints = 0
@@ -27,7 +28,8 @@ class Personaje():
 		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30,"Dinero": 20, "Temperatura corporal":34,"Nivel":1,"Karma":0}
 		self.inventario = {"Poción de resistencia":[1,("Poción (debil)", "Resistencia", True),5],"Cordero":[3,("Comida", "Hambre",True),5]}
 		self.equipables = {}
-		self.equipo = {"Cabeza":False,"Pecho":False,"Manos":False,"Arma":False}
+		self.equipo = {"Cabeza":[False,"0","0"],"Pecho":[False,"|","|"],"Manos":[False,None,None],"Arma":[False,"",""]}
+		self.avatar ='''\n 		 {}\n 		/{}\\{}\n 		/ \\'''.format(self.equipo["Cabeza"][1],self.equipo["Pecho"][1],self.equipo["Arma"][1])
 		needs = Thread(target=self.necesidades)
 		needs.daemon = True
 		needs.start()
@@ -102,14 +104,16 @@ class Personaje():
 				print("**{} no es un objeto consumible.".format(item))
 	def equipar(self, item):
 		if item in self.inventario and not self.inventario[item][1][2]:
-			if self.equipo[self.inventario[item][1][3]]:
+			if self.equipo[self.inventario[item][1][3]][0]:
 				if self.inventario[item][1][3] == "Manos":
 					soespacio = ("s","n")
 				else:
 					soespacio = ("","")
 				print("**Tu{} {} está{} en uso.".format(soespacio[0],self.inventario[item][1][3],soespacio[1]))
 			else:
-				self.equipo[self.inventario[item][1][3]] = True
+				self.equipo[self.inventario[item][1][3]][0] = True
+				self.equipo[self.inventario[item][1][3]][1] = self.inventario[item][1][4]
+				self.avatar ='''\n 		 {}\n 		/{}\\{}\n 		/ \\'''.format(self.equipo["Cabeza"][1],self.equipo["Pecho"][1],self.equipo["Arma"][1])
 				self.equipables[item] = self.inventario[item]
 				del self.inventario[item]
 				self.status[self.equipables[item][1][1]] += self.equipables[item][2]			
@@ -122,7 +126,9 @@ class Personaje():
 		if item in self.equipables:
 			self.inventario[item] = self.equipables[item]
 			del self.equipables[item]
-			self.equipo[self.inventario[item][1][3]] = False
+			self.equipo[self.inventario[item][1][3]][0] = False
+			self.equipo[self.inventario[item][1][3][0]] = self.equipo[self.inventario[1][3][0]][2]
 			self.status[self.inventario[item][1][1]] -= self.inventario[item][2]
+			self.avatar ='''\n 		 {}\n 		/{}\\{}\n 		/ \\'''.format(self.equipo["Cabeza"][1],self.equipo["Pecho"][1],self.equipo["Arma"][1])
 		else:
 			print("**No tienes equipado ese objeto.")

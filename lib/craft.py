@@ -3,9 +3,9 @@
 class CraftingTable():
 	def __init__(self):
 		self.craftable = {
-		"Espada de madera":(1,("Arma", "Fuerza",False,"Arma"),7,{"Rama afilada":2}),
-        "Lanza rustica":(1,("Arma","Fuerza",False,"Arma"),8,{"Rama afilada":1,"Roca":1}),
-        "Espada envenenada":(1,("Arma","Fuerza",False,"Arma"),30,{"Espada":1,"Amaescarla":3}),
+		"Espada de madera":(1,("Arma", "Fuerza",False,"Arma","->>"),7,{"Rama afilada":2}),
+        "Lanza rustica":(1,("Arma","Fuerza",False,"Arma","---_"),8,{"Rama afilada":1,"Roca":1}),
+        "Espada envenenada":(1,("Arma","Fuerza",False,"Arma","-:|>>>"),30,{"Espada":1,"Amaescarla":3}),
         "Ensalada":(1,("Comida","Hambre",True),20,{"Manzana":3,"Larmalona":2,"Zarmajola roja":1})
 		}
 	def craft(self, inv, wannacraft):

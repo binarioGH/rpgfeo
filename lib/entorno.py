@@ -9,8 +9,8 @@ class Mundo():
 		self.objetos_naturales = {
 		"Manzana":[1,("Comida", "Hambre",True),5],
 		"Moneda":[1,("Dinero", "Dinero",True),1],
-		"Rama afilada":[1,("Arma","Fuerza",False,"Arma"),5],
-		"Roca":[1,("Arma","Fuerza",False,"Arma"),1],
+		"Rama afilada":[1,("Arma","Fuerza",False,"Arma","/"),5],
+		"Roca":[1,("Arma","Fuerza",False,"Arma","*"),1],
 		"Zarmajola roja":[1,("Planta","Salud",True),4],
 		"Larmalona":[1,("Planta", "Fuerza",True),2],
 		"Amaescarla":[1,("Planta","Salud",True),-4],
@@ -19,18 +19,19 @@ class Mundo():
 		self.objetos_tienda = {
 		"Poción de resistencia":[1,("Poción (debil)", "Resistencia",True),5],
 		"Poción de regeneración":[1,("Poción (debil)","Salud",True), 3],
-		"Espada":[1,("Arma","Fuerza",False,"Arma"), 20],
-		"Lanza":[1,("Arma","Fuerza",False,"Arma"), 15],
-		"Martillo":[1,("Arma","Fuerza",False,"Arma"), 30],
-		"Casco":[1,("Armadura","Salud",False,"Cabeza"),10],
-		"Peto":[1,("Armadura","Salud",False,"Pecho"),30],
+		"Espada":[1,("Arma","Fuerza",False,"Arma","-|>>>"), 20],
+		"Lanza":[1,("Arma","Fuerza",False,"Arma","--->>"), 15],
+		"Martillo":[1,("Arma","Fuerza",False,"Arma","---8-"), 30],
+		"Casco":[1,("Armadura","Salud",False,"Cabeza","#"),10],
+		"Peto":[1,("Armadura","Salud",False,"Pecho","8"),30],
 		"Guantes de combate":[1,("Armadura","Salud",False,"Manos"),5],
 		"Guantes termicos":[1,("Ropa","Temperatura corporal",False,"Manos"),5],
-		"Sueter":[1,("Ropa","Temperatura corporal",False,"Pecho"),10],
-		"Gorro termico":[1,("Ropa","Temperatura corporal",False,"Cabeza"),5]
+		"Sueter":[1,("Ropa","Temperatura corporal",False,"Pecho","#"),10],
+		"Gorro termico":[1,("Ropa","Temperatura corporal",False,"Cabeza","ö"),5]
 		}
 	def lookaround(self):
 		if self.lugarnuevo:
+			self.around = {}
 			if randint(1,10) == 5:
 				print("**Entras a una tienda.")
 				self.tienda = True

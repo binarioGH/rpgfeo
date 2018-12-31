@@ -1,31 +1,24 @@
 #-*-coding: utf-8-*-
-from random import randint
+from random import randint, choice
 from os import system
 from getpass import getpass
 from platform import python_version as pv
-def combat(clear,pnombre,status,bnombre, blive, battack, inv):
-	oblive = blive
-	avatares = (
-		'''
-            0
-	   /|\\
-	   / \\''',    
-	   '''
-            #
-	   /|\\
-	   / \\
-	   ''',
-	   '''
-            8
-	   /|\\
-	   / \\''',
-	   '''
-            6
-	   /|\\
-	   / \\ ''')
+class Enemy():
+	def __init__(self, seed):
+		cabezas =("o","8","#","6","%")
+		pechos = ("#","1","|","8","I")
+		armas = ("7","/",")","")
+		nombres = ("Bandido","Ladrón","???","Sospechoso")
+		self.avatar = "\n\n 		 {}\n		/{}\\{}\n 		/ \\".format(choice(cabezas),choice(pechos),choice(armas))
+		self.nombre = choice(nombres)
+		self.v = randint(2*seed, seed*3)
+		self.f = randint(seed, seed*4)
+		self.status = {"Salud":self.v, "Fuerza":self.f}
+def combat(clear,pnombre,status,bstatus, bnombre, inv, avatar, bavatar):
+	olive = bstatus["Salud"]	
 	if str(pv())[0] == "3":
 		raw_input = input
-	while status["Salud"] > 0 and blive > 0:
+	while status["Salud"] > 0 and bstatus["Salud"] > 0:
 		system(clear)
 		cmd = raw_input('''
 			[{}]  [{}]        [{}]  [{}]
@@ -35,12 +28,12 @@ def combat(clear,pnombre,status,bnombre, blive, battack, inv):
             [A] Atacar.
             [B] Bloquear ataque.
             [I] Inventario.
-			>>>'''.format(pnombre, status["Salud"], bnombre, blive, avatares[0], avatares[randint(1,3)]).strip())
+			>>>'''.format(pnombre, status["Salud"], bnombre, bstatus["Salud"], avatar, bavatar))
 		cmd = cmd.lower()
 		if cmd == "a":
-			blive -= randint(int(status["Fuerza"] / 2), status["Fuerza"] * 2)
+			bstatus["Salud"] -= randint(int(status["Fuerza"] / 2), status["Fuerza"] * 2)
 		elif cmd == "b":
-			status["Salud"] += battack /2
+			status["Salud"] += bstatus["Fuerza"] /2
 		elif cmd == "i":
 			print("Objeto      |      Cantidad      |      Tipo")
 			for obj in inv:
@@ -58,16 +51,16 @@ def combat(clear,pnombre,status,bnombre, blive, battack, inv):
 			else:
 				print("**Este objeto no es consumible.")
 			getpass("Aprieta enter para continuar.")
-		if blive <= 0:
-			ganar(status, oblive)
+		if bstatus["Salud"] <= 0:
+			ganar(status, olive)
 			continue
 		bchoice = randint(1,2)
 		if bchoice == 1:
-			status["Salud"] -= battack
+			status["Salud"] -= bstatus["Fuerza"]
 		elif bchoice == 2:
-			blive += status["Fuerza"] / 2
+			bstatus["Salud"] += status["Fuerza"] / 2
 	system(clear)
-	if status["Salud"] > blive:
+	if status["Salud"] > bstatus["Salud"]:
 		return 1
 	else:
 		return 0

@@ -30,12 +30,11 @@ def robo():
 	narrador =("**Una persona se aproxima, tiene uniforme de la orden de los cuervos.","**Una sombra está rondando, aparenta malas intenciones.","**Un bandido mira a {} fijamente mientras se acerca.".format(mc.nombre))
 	print(choice(narrador))
 	print("\n*****Batalla*****")
-	ladron_vida = randint(2*mc.status["Nivel"], 3*mc.status["Nivel"])
-	ladron_ataque = randint(mc.status["Nivel"],4*mc.status["Nivel"])
+	e = Enemy(mc.status["Nivel"])
 	getpass("Presiona doble enter para continuar...		")
-	kmbt = combat(mc.clear, mc.nombre, mc.status,"???",ladron_vida,ladron_ataque, mc.inventario)
+	kmbt = combat(mc.clear, mc.nombre, mc.status, e.status,e.nombre,mc.inventario,mc.avatar,e.avatar)
 	if kmbt == 1:
-		xp = (ladron_vida + ladron_ataque) / 2
+		xp = (e.v + e.f) / 2
 		print("**{} adquirió {} puntos de xp.".format(mc.nombre, xp))
 		mc.xp += xp
 	else:
@@ -104,6 +103,7 @@ if __name__ == '__main__':
 					m.lookaround()
 				elif cmd == "moverse" or cmd == "caminar":
 					m.lugarnuevo = True
+					m.tienda = False
 				elif cmd[:7] == "recoger":
 					if cmd[8:] in m.around and not m.tienda:
 						m.around[cmd[8:]][0] = m.around[cmd[8:]][0] - 1
