@@ -1,3 +1,4 @@
+
 .importante{
 	font-family:"Arial Black";
 	border-bottom:1px solid black;
@@ -19,6 +20,13 @@ header{
 .nv{
 	margin-left:25%;
 	width: 50%;}
+section{
+	width: 70%;
+	background-color:rgb(67, 48, 136);
+	border-left:20px solid yellow;
+	border-right:20px solid yellow;
+	margin-left:13%;
+}
 article{
 	width: 70%;
 	margin-left:15%;
@@ -38,13 +46,13 @@ article{
 .cmds li{
 	margin-bottom:10px;
 	border-bottom:2px solid black;
-	width:12%;
+	width:20%;
 }
 /*
     En esta parte pienso poner una descripción de cada comando, por eso tienen IDs, pero no tengo internet para buscar como se hace eso.
 */
 .sep{
-	border-bottom:3px solid black;}
+	border-bottom:3px solid yellow;}
 footer{
 	background-color:black;
 	color: white;
