@@ -1,8 +1,34 @@
 #-*-coding: utf-8-*-
 from threading import Thread
 from time import sleep
-from random import choice
+from random import choice, randint
 from platform import platform
+class Magic():
+	def __init__(self, status):
+		self.s = status
+		self.bottom = 5
+		self.top = 10
+		self.spells = {"Marchitar":(self.marchitar, "Daña a tu enemigo.", "Daño"),"Luz" :(self.luz,"Aumenta el valor de un elemento de tu status.", "Fortuna"),"Alquimia":(self.alquimia, "Transforma un objeto en oro.","Fortuna")}
+		self.keepdoingthespell = True
+	def marchitar(self, enemy):
+		spend = randint(self.bottom,self.top)
+		if self.s["Maná"] >= spend:
+			self.s["Maná"] -= spend
+			enemy["Salud"] -= spend
+		else: 
+			self.s["Salud"] -= spend / 2
+	def luz(self):
+		spend = randint(int(self.s["Maná"] / 6), int(self.s["Maná"] /4	))
+		while self.s["Maná"] >= spend and self.keepdoingthespell:
+			spnd = randint(self.bottom, self.top)
+			sleep(spnd)
+			self.s["Salud"] += spnd
+			self.s["Maná"] -= spnd /2
+	def alquimia(self):
+		self.s["Dinero"] += randint(self.bottom, self.top)
+		self.s["Maná"] -= 40
+		self.s["Salud"] -= 3
+
 def listarobjetos(lista):
 	print("Objeto      |      Cantidad       |      Tipo")
 	for item in lista:
@@ -25,7 +51,8 @@ class Personaje():
 		else:
 			self.letra = ("a", "á")
 		self.comentarios()
-		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30,"Dinero": 20, "Temperatura corporal":34,"Nivel":1,"Karma":0}
+		self.status = {"Salud":10,"Hambre": 10, "Fuerza": 3, "Resistencia": 30,"Dinero": 20, "Temperatura corporal":34,"Nivel":1,"Karma":0, "Maná":0}
+		self.m = Magic(self.status)
 		self.inventario = {"Poción de resistencia":[1,("Poción (debil)", "Resistencia", True),5],"Cordero":[3,("Comida", "Hambre",True),5]}
 		self.equipables = {}
 		self.equipo = {"Cabeza":[False,"0","0"],"Pecho":[False,"|","|"],"Manos":[False,None,None],"Arma":[False,"",""]}
@@ -72,7 +99,7 @@ class Personaje():
 				karmabottom += karmabottom
 				print("**Tu fuerza ha mejorado por tu karma.")
 	def consumirxp(self, mejora):
-		elements = ("Fuerza", "Salud", "Resistencia")
+		elements = ("Fuerza", "Salud", "Resistencia","Maná")
 		if mejora in elements:
 			if self.xppoints <= 0:
 				print("**No tienes suficientes puntos de experiencia.")

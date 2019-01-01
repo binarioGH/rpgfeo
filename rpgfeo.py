@@ -32,7 +32,7 @@ def robo():
 	print("\n*****Batalla*****")
 	e = Enemy(mc.status["Nivel"])
 	getpass("Presiona doble enter para continuar...		")
-	kmbt = combat(mc.clear, mc.nombre, mc.status, e.status,e.nombre,mc.inventario,mc.avatar,e.avatar)
+	kmbt = combat(mc.clear, mc.nombre, mc.status, e.status,e.nombre,mc.inventario,mc.avatar,e.avatar, mc.m.spells)
 	if kmbt == 1:
 		xp = (e.v + e.f) / 2
 		print("**{} adquirió {} puntos de xp.".format(mc.nombre, xp))
@@ -149,6 +149,19 @@ if __name__ == '__main__':
 					ct.listarobjetos()
 				elif cmd == mc.clear:
 					system(mc.clear)
+				elif cmd == "mis hechizos" or cmd == "magia":
+					for spell in mc.m.spells:
+						print("{} : {}".format(spell, mc.m.spells[spell][1]))
+				elif cmd[:7] == "hechizo":
+					if cmd[8:] in mc.m.spells:
+						if mc.m.spells[cmd[8:]][2] == "Daño":
+							print("**No se pueden usar hechizos de daño fuera de combate.")
+						else:
+							spl = Thread(target=mc.m.spells[cmd[8:]][0])
+							spl.daemon = True
+							spl.start()
+					else:
+						print("Hechizo no encontrado")
 				elif cmd == "ADMIN: -*-lluvia":
 					rain = Thread(target=lluvia)
 					rain.daemon = True
@@ -161,6 +174,8 @@ if __name__ == '__main__':
 					mc.xp = 1000
 				elif cmd == "ADMIN: -*-dinero":
 					mc.status["Dinero"] += 10000
+				elif cmd == "ADMIN: -*-mana":
+					mc.status["Maná"] += 1000
 			except IndexError:
 				pass
 			except Exception as e:

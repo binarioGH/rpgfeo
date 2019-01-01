@@ -14,8 +14,9 @@ class Enemy():
 		self.v = randint(2*seed, seed*3)
 		self.f = randint(seed, seed*4)
 		self.status = {"Salud":self.v, "Fuerza":self.f}
-def combat(clear,pnombre,status,bstatus, bnombre, inv, avatar, bavatar):
-	olive = bstatus["Salud"]	
+def combat(clear,pnombre,status,bstatus, bnombre, inv, avatar, bavatar, spells):
+	olive = bstatus["Salud"]
+	cando = []	
 	if str(pv())[0] == "3":
 		raw_input = input
 	while status["Salud"] > 0 and bstatus["Salud"] > 0:
@@ -28,6 +29,7 @@ def combat(clear,pnombre,status,bstatus, bnombre, inv, avatar, bavatar):
             [A] Atacar.
             [B] Bloquear ataque.
             [I] Inventario.
+            [M] Magia.
 			>>>'''.format(pnombre, status["Salud"], bnombre, bstatus["Salud"], avatar, bavatar))
 		cmd = cmd.lower()
 		if cmd == "a":
@@ -51,6 +53,21 @@ def combat(clear,pnombre,status,bstatus, bnombre, inv, avatar, bavatar):
 			else:
 				print("**Este objeto no es consumible.")
 			getpass("Aprieta enter para continuar.")
+		elif cmd == "m":
+			if cando == []:
+				for spell in spells:
+					if spells[spell][2] == "Daño":
+						cando.append(spell)
+					else:
+						continue
+			for do in cando:
+				print("{} : {}".format(do, spells[do][1]))
+			do = ""
+			while not do in cando:
+				do = raw_input(">>")
+			spells[do][0](bstatus)
+
+
 		if bstatus["Salud"] <= 0:
 			ganar(status, olive)
 			continue
